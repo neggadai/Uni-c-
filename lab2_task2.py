@@ -1,28 +1,39 @@
-import itertools
 
-A = {1, 2, 3, 4, 5, 6, 7}
-B = {4, 5, 6, 7, 8, 9, 10}
-C = {1, 3, 5, 7, 9}
-U = {i for i in range(1, 11)}  
+def intersect(set1,set2):
+    inter = []
+    for i in set1:
+        for g in set2:
+            if g == i:
+                inter.append(g)
+    return inter
 
-result_a = A.intersection((U - B).symmetric_difference(C))
+def diff(set1,set2):
+    differ = []
+    for i in set1:
+        IsInSet1 = False
+        for g in set2:
+            if g == i:
+                IsInSet1 = True
+        if not IsInSet1:
+            differ.append(i)
+    return differ
 
-bolean = []
-for i in range(len(result_a)+1):
 
-    bolean.append(itertools.combinations(result_a,i))
+set1 = input("Введіть першу множину: ").split()
 
-def iter_to_value(iterator,arr):
-    try:
-        while True:
-            next_val = next(iterator)
-            arr.append(next_val)
-    except StopIteration:
-        pass
+#for i in set1:
+#    assert type(i) == float or i == " ", "wrong_type"
 
-bolean_answer = []
-for i in bolean:
-    iter_to_value(i,bolean_answer)
+set2 = input("Введіть другу множину: ").split()
+#for i in set2:
+#    assert type(i) == float or i == " ", "wrong_type"
 
-print(f"Булеан: {bolean_answer}")
-print(f"Потужність булеану = {len(bolean_answer)}")
+intersection = intersect(set1,set2)
+difference = diff(set1,set2)
+
+print("Переріз множин:", intersection)
+print("Різниця множин:", difference)
+
+print("Потужність перерізу множин:", len(intersection))
+print("Потужність різниці множин:", len(difference))
+

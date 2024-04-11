@@ -1,41 +1,76 @@
+"""
+Написати на будь-якій відомій студентові мові програмування програму для 
+реалізації програмного визначення значень таблиці істиності логічних 
+висловлювань при різних інтерпретаціях
+"""
+
+
 import itertools
+
+def infix_to_postfix(expression):
+    value = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    postfix = []
+    stack = []
+
+    for char in expression:
+        if char.isalnum():
+            postfix.append(char)
+        elif char == '(':
+            stack.append(char)
+        elif char == ')':
+            while stack[-1] != '(':
+                postfix.append(stack.pop())
+            stack.pop()  
+        else:  
+            while stack and value.get(stack[-1], 0) >= value.get(char, 0):
+                postfix.append(stack.pop())
+            stack.append(char)
+
+    while stack:
+        postfix.append(stack.pop())
+
+    return ''.join(postfix)
+
+
+
+infix_expression = "(a * b) + c"
+postfix_expression = infix_to_postfix(infix_expression)
+print("Постфиксное выражение:", postfix_expression)
 
 # Функція для обчислення значення логічного виразу
 def evaluate(expression, interpretation):
     stack = []
-    try:
-        for char in expression:
-            if char == 'x':
-                stack.append(interpretation[0])
-            elif char == 'y':
-                stack.append(interpretation[1])
-            elif char == 'z':
-                stack.append(interpretation[2])
-            elif char == '¬':
-                stack.append(not stack.pop())
-            elif char == '∨':
-                operand2 = stack.pop()
-                operand1 = stack.pop()
-                stack.append(operand1 or operand2)
-            elif char == '∧':
-                operand2 = stack.pop()
-                operand1 = stack.pop()
-                stack.append(operand1 and operand2)
-            elif char == '→':
-                operand2 = stack.pop()
-                operand1 = stack.pop()
-                stack.append(not operand1 or operand2)
-            elif char == '↔':
-                operand2 = stack.pop()
-                operand1 = stack.pop()
-                stack.append((not operand1 or operand2) and (not operand2 or operand1))
-    except IndexError:
-        return False  # Повертаємо False у випадку, якщо стек порожній
+    for char in expression:
+        if char == 'x':
+            stack.append(interpretation[0])
+        elif char == 'y':
+            stack.append(interpretation[1])
+        elif char == 'z':
+            stack.append(interpretation[2])
+        elif char == '¬':
+            stack.append(not stack.pop())
+        elif char == '∨':
+            operand2 = stack.pop()
+            operand1 = stack.pop()
+            stack.append(operand1 or operand2)
+        elif char == '∧':
+            operand2 = stack.pop()
+            operand1 = stack.pop()
+            stack.append(operand1 and operand2)
+        elif char == '→':
+            operand2 = stack.pop()
+            operand1 = stack.pop()
+            stack.append(not operand1 or operand2)
+        elif char == '↔':
+            operand2 = stack.pop()
+            operand1 = stack.pop()
+            stack.append((not operand1 or operand2) and (not operand2 or operand1))
+
     return stack.pop()
 
 # Функція для перевірки введених даних
 def check_input(expression):
-    valid_chars = {'x', 'y', 'z', '¬', '∨', '∧', '→', '↔', '(', ')'}
+    valid_chars = {'x', 'y', 'z', '¬', '∨', '∧', '→', '↔', '(', ')', ' '}
     for char in expression:
         if char not in valid_chars:
             return False
