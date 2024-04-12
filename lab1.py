@@ -8,21 +8,25 @@
 import itertools
 
 def infix_to_postfix(expression):
-    value = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+
+    def higher_precedence(op1, op2):
+        return precedence[op1] >= precedence[op2]
+
     postfix = []
     stack = []
 
     for char in expression:
-        if char.isalnum():
+        if char.isdigit():
             postfix.append(char)
         elif char == '(':
             stack.append(char)
         elif char == ')':
-            while stack[-1] != '(':
+            while stack and stack[-1] != '(':
                 postfix.append(stack.pop())
-            stack.pop()  
-        else:  
-            while stack and value.get(stack[-1], 0) >= value.get(char, 0):
+            stack.pop() 
+        elif char in precedence:
+            while stack and stack[-1] != '(' and higher_precedence(stack[-1], char):
                 postfix.append(stack.pop())
             stack.append(char)
 
@@ -30,6 +34,12 @@ def infix_to_postfix(expression):
         postfix.append(stack.pop())
 
     return ''.join(postfix)
+
+
+infix_expression = input("Введіть інфіксний вираз: ")
+postfix_expression = infix_to_postfix(infix_expression)
+print("Постфіксний вираз:", postfix_expression)
+
 
 
 
