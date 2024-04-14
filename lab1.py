@@ -8,16 +8,17 @@
 import itertools
 
 def infix_to_postfix(expression):
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+    precedence = {'∨': 1, '-': 1, '∧': 2, '/': 2}
 
     def higher_precedence(op1, op2):
         return precedence[op1] >= precedence[op2]
 
     postfix = []
     stack = []
+    simpleExp = ['a', 'b', 'c']
 
     for char in expression:
-        if char.isdigit():
+        if char.isdigit() or char in simpleExp:
             postfix.append(char)
         elif char == '(':
             stack.append(char)
@@ -36,17 +37,13 @@ def infix_to_postfix(expression):
     return ''.join(postfix)
 
 
+
+
+
 infix_expression = input("Введіть інфіксний вираз: ")
 postfix_expression = infix_to_postfix(infix_expression)
 print("Постфіксний вираз:", postfix_expression)
-
-
-
-
-infix_expression = "(a * b) + c"
-postfix_expression = infix_to_postfix(infix_expression)
-print("Постфиксное выражение:", postfix_expression)
-
+'''
 # Функція для обчислення значення логічного виразу
 def evaluate(expression, interpretation):
     stack = []
@@ -110,8 +107,9 @@ def main():
         print("|", end="")
         for value in interpretation:
             print(f" {int(value)} |", end="")
-        print(f"  {int(evaluate(expression, interpretation))}  |")
+        print(f"  {int(evaluate(infix_to_postfix(expression), interpretation))}  |")
         print("-" * (num_variables * 5 + len(expression) + 4))
 
 if __name__ == "__main__":
     main()
+'''
